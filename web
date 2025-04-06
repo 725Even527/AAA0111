@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>居中生日祝福</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+            font-family: 'Arial Rounded MT Bold', 'Arial', sans-serif;
+            overflow-x: hidden;
+        }
+
+        .content-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .controls {
+            margin-bottom: 30px;
+            text-align: center;
+            width: 100%;
+            position: relative;
+            z-index: 10;
+        }
+
+        input[type="text"] {
+            padding: 12px 15px;
+            font-size: 16px;
+            border: 2px solid #e91e63;
+            border-radius: 25px;
+            margin-right: 10px;
+            width: 200px;
+            outline: none;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+        }
+
+        input[type="text"]:focus {
+            border-color: #c2185b;
+            box-shadow: 0 2px 10px rgba(233,30,99,0.3);
+        }
+
+        button {
+            padding: 12px 25px;
+            background: linear-gradient(135deg, #e91e63, #c2185b);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 16px;
+            margin: 5px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .cake-container {
+            position: relative;
+            animation: float 2s ease-in-out infinite;
+            margin: 40px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .cake {
+            position: relative;
+            width: 220px;
+            height: 120px;
+        }
+
+        .base {
+            position: absolute;
+            width: 220px;
+            height: 90px;
+            background: linear-gradient(145deg, #ff8a80, #ff5252);
+            border-radius: 15px 15px 0 0;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        .icing {
+            position: absolute;
+            top: -15px;
+            width: 240px;
+            height: 30px;
+            left: -10px;
+            background: linear-gradient(to bottom, #fff, #f5f5f5);
+            border-radius: 20px;
+            box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+        }
+
+        .candle {
+            position: absolute;
+            width: 14px;
+            height: 60px;
+            background: linear-gradient(to bottom, #4CAF50, #2E7D32);
+            left: 50%;
+            transform: translateX(-50%);
+            animation: bounce 0.8s infinite;
+            border-radius: 5px 5px 0 0;
+        }
+
+        .flame {
+            position: absolute;
+            width: 10px;
+            height: 20px;
+            background: linear-gradient(to bottom, #ffff00, #ff9800);
+            top: -20px;
+            left: 2px;
+            border-radius: 50% 50% 20% 20%;
+            animation: flicker 0.1s infinite;
+            box-shadow: 0 0 20px #ffeb3b;
+            filter: blur(1px);
+        }
+
+        .greeting {
+            font-size: 28px;
+            color: #e91e63;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+            margin-bottom: 30px;
+            font-weight: bold;
+            text-align: center;
+            white-space: nowrap;
+            position: relative;
+            z-index: 5;
+            background: rgba(255,255,255,0.7);
+            padding: 10px 30px;
+            border-radius: 50px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(-15px); }
+        }
+
+        @keyframes flicker {
+            0%, 100% { transform: scale(1); opacity: 0.9; }
+            25% { transform: scale(1.1, 0.9); }
+            50% { transform: scale(0.95, 1.05); }
+            75% { transform: scale(1.05, 0.95); }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .decorations {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .sprinkle {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            animation: float 3s ease-in-out infinite;
+            opacity: 0.8;
+        }
+
+        .confetti {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            background: #f00;
+            animation: confetti-fall 5s linear infinite;
+            opacity: 0;
+        }
+
+        @keyframes confetti-fall {
+            0% {
+                transform: translateY(-100px) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="content-wrapper">
+        <div class="controls">
+            <input type="text" id="nameInput" placeholder="输入名字">
+            <button onclick="updateName()">更新祝福</button>
+            <button onclick="playMusic()">播放音乐</button>
+            <button onclick="stopMusic()">停止音乐</button>
+        </div>
+
+        <div class="greeting" id="greetingText">生日快乐！</div>
+        
+        <div class="cake-container">
+            <div class="cake">
+                <div class="base"></div>
+                <div class="icing"></div>
+                <div class="candle">
+                    <div class="flame"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+    <script>
+        // 更新祝福语
+        function updateName() {
+            const name = document.getElementById('nameInput').value;
+            const greeting = name ? `${name}，生日快乐！` : "生日快乐！";
+            document.getElementById('greetingText').textContent = greeting;
+            createConfetti();
+        }
+
+        // 音乐播放控制
+        let isPlaying = false;
+        let player = null;
+
+        async function playMusic() {
+            if (isPlaying) return;
+            
+            try {
+                await Tone.start();
+                console.log("音频已准备就绪");
+                
+                // 简单合成器代替MIDI播放
+                const synth = new Tone.PolySynth(Tone.Synth).toDestination();
+                const now = Tone.now();
+                
+                // 生日快乐简谱
+                const notes = [
+                    { note: "C4", time: now + 0, duration: "8n" },
+                    { note: "C4", time: now + 0.5, duration: "8n" },
+                    { note: "D4", time: now + 1, duration: "4n" },
+                    { note: "C4", time: now + 1.5, duration: "4n" },
+                    { note: "F4", time: now + 2, duration: "4n" },
+                    { note: "E4", time: now + 3, duration: "2n" },
+                    
+                    { note: "C4", time: now + 5, duration: "8n" },
+                    { note: "C4", time: now + 5.5, duration: "8n" },
+                    { note: "D4", time: now + 6, duration: "4n" },
+                    { note: "C4", time: now + 6.5, duration: "4n" },
+                    { note: "G4", time: now + 7, duration: "4n" },
+                    { note: "F4", time: now + 8, duration: "2n" },
+                    
+                    { note: "C4", time: now + 10, duration: "8n" },
+                    { note: "C4", time: now + 10.5, duration: "8n" },
+                    { note: "C5", time: now + 11, duration: "4n" },
+                    { note: "A4", time: now + 11.5, duration: "4n" },
+                    { note: "F4", time: now + 12, duration: "4n" },
+                    { note: "E4", time: now + 13, duration: "4n" },
+                    { note: "D4", time: now + 14, duration: "2n" },
+                    
+                    { note: "Bb4", time: now + 16, duration: "8n" },
+                    { note: "Bb4", time: now + 16.5, duration: "8n" },
+                    { note: "A4", time: now + 17, duration: "4n" },
+                    { note: "F4", time: now + 17.5, duration: "4n" },
+                    { note: "G4", time: now + 18, duration: "4n" },
+                    { note: "F4", time: now + 19, duration: "2n" }
+                ];
+                
+                notes.forEach(n => {
+                    synth.triggerAttackRelease(n.note, n.duration, n.time);
+                });
+                
+                isPlaying = true;
+                Tone.Transport.start();
+                
+                setTimeout(() => {
+                    isPlaying = false;
+                    Tone.Transport.stop();
+                }, 20000);
+                
+            } catch (error) {
+                console.error("播放失败:", error);
+                alert("播放音乐需要用户交互，请先点击页面任意位置");
+            }
+        }
+
+        function stopMusic() {
+            if (isPlaying) {
+                Tone.Transport.stop();
+                isPlaying = false;
+            }
+        }
+
+        // 创建彩色糖粒
+        function addSprinkles() {
+            const colors = ['#FF5252', '#FFEB3B', '#4CAF50', '#2196F3', '#9C27B0', '#FF9800'];
+            const icing = document.querySelector('.icing');
+            
+            for (let i = 0; i < 25; i++) {
+                const sprinkle = document.createElement('div');
+                sprinkle.className = 'sprinkle';
+                sprinkle.style.background = colors[Math.floor(Math.random() * colors.length)];
+                sprinkle.style.left = `${10 + Math.random() * 80}%`;
+                sprinkle.style.top = `${30 + Math.random() * 60}%`;
+                sprinkle.style.width = `${6 + Math.random() * 6}px`;
+                sprinkle.style.height = sprinkle.style.width;
+                sprinkle.style.animationDelay = `${Math.random() * 3}s`;
+                sprinkle.style.animationDuration = `${2 + Math.random() * 4}s`;
+                icing.appendChild(sprinkle);
+            }
+        }
+
+        // 创建彩色纸屑效果
+        function createConfetti() {
+            const colors = ['#e91e63', '#00bcd4', '#ffeb3b', '#4caf50', '#9c27b0', '#ff9800'];
+            const container = document.querySelector('.content-wrapper');
+            
+            for (let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.left = `${Math.random() * 100}%`;
+                confetti.style.animationDelay = `${Math.random() * 2}s`;
+                confetti.style.animationDuration = `${3 + Math.random() * 4}s`;
+                confetti.style.width = `${8 + Math.random() * 10}px`;
+                confetti.style.height = `${8 + Math.random() * 10}px`;
+                confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+                container.appendChild(confetti);
+                
+                // 自动移除元素
+                setTimeout(() => {
+                    confetti.remove();
+                }, 7000);
+            }
+        }
+
+        // 页面加载初始化
+        window.onload = function() {
+            addSprinkles();
+            // 首次点击页面时初始化音频
+            document.addEventListener('click', function initAudio() {
+                Tone.start();
+                console.log("音频上下文已激活");
+                document.removeEventListener('click', initAudio);
+            }, { once: true });
+        };
+    </script>
+</body>
+</html>
